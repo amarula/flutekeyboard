@@ -19,8 +19,7 @@ class NumericKeyboard extends BaseKeyboard {
     required super.returnIcon,
     required super.onReturn,
     FluteKeyboardTheme? theme,
-  }) 
-  {
+  }) {
     this.theme = theme ?? FluteKeyboardTheme();
   }
 

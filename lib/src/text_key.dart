@@ -18,8 +18,7 @@ class TextKey extends StatefulWidget {
     this.alternatives = const [],
     FluteKeyboardTheme? theme,
     super.key,
-  })
-  {
+  }) {
     this.theme = theme ?? FluteKeyboardTheme();
   }
 
@@ -37,7 +36,6 @@ class _LongPressKeyState extends State<TextKey> {
   Offset _popupPosition = Offset.zero;
 
   void _showOverlay(BuildContext context) {
-
     final RenderBox box =
         _keyGlobal.currentContext!.findRenderObject() as RenderBox;
     final Offset buttonPosition = box.localToGlobal(Offset.zero);

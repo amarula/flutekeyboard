@@ -18,7 +18,6 @@ class AlphanumericKeyboard extends BaseKeyboard {
   final Layout layout;
   late final FluteKeyboardTheme theme;
 
-
   AlphanumericKeyboard({
     super.key,
     required super.textController,
@@ -29,8 +28,7 @@ class AlphanumericKeyboard extends BaseKeyboard {
     required this.shiftActiveIcon,
     required this.layout,
     FluteKeyboardTheme? theme,
-  })
-  {
+  }) {
     this.theme = theme ?? FluteKeyboardTheme();
   }
 
