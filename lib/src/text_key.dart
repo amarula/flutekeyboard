@@ -74,8 +74,8 @@ class _LongPressKeyState extends State<TextKey> {
                   margin: const EdgeInsets.symmetric(horizontal: 2),
                   decoration: BoxDecoration(
                     color: isHighlighted
-                        ? widget.theme?.btnReturnColor
-                        : widget.theme?.btnBackgroundColor,
+                        ? widget.theme.btnReturnColor
+                        : widget.theme.btnBackgroundColor,
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: const [
                       BoxShadow(blurRadius: 4, color: Colors.black26)
@@ -84,7 +84,7 @@ class _LongPressKeyState extends State<TextKey> {
                   alignment: Alignment.center,
                   child: Text(
                     widget.isShifted ? char.toUpperCase() : char.toLowerCase(),
-                    style: widget.theme?.btnTextStyle,
+                    style: widget.theme.btnTextStyle,
                   ),
                 );
               }),
