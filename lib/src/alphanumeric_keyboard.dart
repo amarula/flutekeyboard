@@ -16,8 +16,10 @@ class AlphanumericKeyboard extends BaseKeyboard {
   final String shiftIcon;
   final String shiftActiveIcon;
   final Layout layout;
+  FluteKeyboardTheme ? theme;
 
-  const AlphanumericKeyboard({
+
+  AlphanumericKeyboard({
     super.key,
     required super.textController,
     required super.backspaceIcon,
@@ -26,7 +28,11 @@ class AlphanumericKeyboard extends BaseKeyboard {
     required this.shiftIcon,
     required this.shiftActiveIcon,
     required this.layout,
-  });
+    this.theme
+  })
+  {
+    theme = theme ?? FluteKeyboardTheme();
+  }
 
   @override
   State<AlphanumericKeyboard> createState() => _AlphanumericKeyboardState();
@@ -127,6 +133,7 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
         alternatives: alternatives,
         isShifted: _shiftActive,
         textController: widget.textController,
+        theme: widget.theme,
       ),
     );
   }

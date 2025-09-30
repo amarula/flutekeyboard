@@ -9,14 +9,19 @@ class TextKey extends StatefulWidget {
   final List<String> alternatives;
   final bool isShifted;
   final TextEditingController textController;
+  FluteKeyboardTheme? theme;
 
-  const TextKey({
+  TextKey({
     required this.text,
     required this.isShifted,
     required this.textController,
     this.alternatives = const [],
+    this.theme,
     super.key,
-  });
+  })
+  {
+    theme = theme ?? FluteKeyboardTheme();
+  }
 
   @override
   State<TextKey> createState() => _LongPressKeyState();
@@ -32,7 +37,6 @@ class _LongPressKeyState extends State<TextKey> {
   Offset _popupPosition = Offset.zero;
 
   void _showOverlay(BuildContext context) {
-    final theme = FluteKeyboardTheme();
 
     final RenderBox box =
         _keyGlobal.currentContext!.findRenderObject() as RenderBox;
@@ -70,8 +74,8 @@ class _LongPressKeyState extends State<TextKey> {
                   margin: const EdgeInsets.symmetric(horizontal: 2),
                   decoration: BoxDecoration(
                     color: isHighlighted
-                        ? theme.btnReturnColor
-                        : theme.btnBackgroundColor,
+                        ? widget.theme?.btnReturnColor
+                        : widget.theme?.btnBackgroundColor,
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: const [
                       BoxShadow(blurRadius: 4, color: Colors.black26)
@@ -80,7 +84,7 @@ class _LongPressKeyState extends State<TextKey> {
                   alignment: Alignment.center,
                   child: Text(
                     widget.isShifted ? char.toUpperCase() : char.toLowerCase(),
-                    style: theme.btnTextStyle,
+                    style: widget.theme?.btnTextStyle,
                   ),
                 );
               }),
