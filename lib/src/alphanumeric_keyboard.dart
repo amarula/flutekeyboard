@@ -16,7 +16,7 @@ class AlphanumericKeyboard extends BaseKeyboard {
   final String shiftIcon;
   final String shiftActiveIcon;
   final Layout layout;
-  FluteKeyboardTheme ? theme;
+  late final FluteKeyboardTheme theme;
 
 
   AlphanumericKeyboard({
@@ -28,10 +28,10 @@ class AlphanumericKeyboard extends BaseKeyboard {
     required this.shiftIcon,
     required this.shiftActiveIcon,
     required this.layout,
-    this.theme
+    FluteKeyboardTheme? theme,
   })
   {
-    theme = theme ?? FluteKeyboardTheme();
+    this.theme = theme ?? FluteKeyboardTheme();
   }
 
   @override

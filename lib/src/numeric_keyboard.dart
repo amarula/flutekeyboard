@@ -11,17 +11,17 @@ import 'package:flutekeyboard/src/special_key.dart';
 import 'package:flutekeyboard/src/text_key.dart';
 
 class NumericKeyboard extends BaseKeyboard {
-  FluteKeyboardTheme ? theme;
+  late final FluteKeyboardTheme theme;
   NumericKeyboard({
     super.key,
     required super.textController,
     required super.backspaceIcon,
     required super.returnIcon,
     required super.onReturn,
-    this.theme
+    FluteKeyboardTheme? theme,
   }) 
   {
-    theme = theme ?? FluteKeyboardTheme();
+    this.theme = theme ?? FluteKeyboardTheme();
   }
 
   @override

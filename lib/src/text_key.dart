@@ -9,18 +9,18 @@ class TextKey extends StatefulWidget {
   final List<String> alternatives;
   final bool isShifted;
   final TextEditingController textController;
-  FluteKeyboardTheme? theme;
+  late final FluteKeyboardTheme theme;
 
   TextKey({
     required this.text,
     required this.isShifted,
     required this.textController,
     this.alternatives = const [],
-    this.theme,
+    FluteKeyboardTheme? theme,
     super.key,
   })
   {
-    theme = theme ?? FluteKeyboardTheme();
+    this.theme = theme ?? FluteKeyboardTheme();
   }
 
   @override
