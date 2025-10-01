@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:flutekeyboard/flutekeyboard_theme.dart';
+import 'package:flutekeyboard/src/colors_utils.dart';
 
 enum SpecialKeys {
   space,
@@ -35,17 +36,25 @@ class _SpecialKeyState extends State<SpecialKey> {
   Widget build(BuildContext context) {
     final theme = FluteKeyboardTheme();
 
-    return InkWell(
-      onTap: () => widget.onPressed(),
-      child: Container(
-        decoration: BoxDecoration(
-            color: widget.backgroundColor,
-            borderRadius: BorderRadius.circular(8)),
-        child: Center(
-          child: Text(
-            widget.text,
-            style: theme.btnTextStyle,
-          ),
+    return ElevatedButton(
+      onPressed: () => widget.onPressed(),
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        elevation: 0,
+        splashFactory: NoSplash.splashFactory,
+        foregroundColor: Theme.of(context).brightness == Brightness.dark
+            ? ColorsUtils.lighten(widget.backgroundColor, 1)
+            : ColorsUtils.darken(widget.backgroundColor, 1),
+        backgroundColor: widget.backgroundColor,
+        padding: EdgeInsets.zero,
+        minimumSize: Size.zero,
+      ),
+      child: Center(
+        child: Text(
+          widget.text,
+          style: theme.btnTextStyle,
         ),
       ),
     );

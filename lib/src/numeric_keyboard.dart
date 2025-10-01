@@ -1,8 +1,8 @@
 // Flutter imports:
-import 'package:flutekeyboard/flutekeyboard_theme.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
+import 'package:flutekeyboard/flutekeyboard_theme.dart';
 import 'package:flutekeyboard/layouts/numeric_layout.dart';
 import 'package:flutekeyboard/src/base_keyboard.dart';
 import 'package:flutekeyboard/src/buttons.dart';

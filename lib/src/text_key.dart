@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:flutekeyboard/flutekeyboard_theme.dart';
+import 'package:flutekeyboard/src/colors_utils.dart';
 
 class TextKey extends StatefulWidget {
   final String text;
@@ -155,7 +156,6 @@ class _LongPressKeyState extends State<TextKey> {
     final theme = FluteKeyboardTheme();
 
     return GestureDetector(
-      onTap: () => _insertText(widget.text),
       onLongPressStart: (details) {
         if (widget.alternatives.isEmpty) {
           _insertText(widget.text);
@@ -175,15 +175,28 @@ class _LongPressKeyState extends State<TextKey> {
       },
       child: Container(
         key: _keyGlobal,
-        decoration: BoxDecoration(
-            color: theme.btnBackgroundColor,
-            borderRadius: BorderRadius.circular(8)),
-        child: Center(
-          child: Text(
-            widget.isShifted
-                ? widget.text.toUpperCase()
-                : widget.text.toLowerCase(),
-            style: theme.btnTextStyle,
+        child: ElevatedButton(
+          onPressed: () => _insertText(widget.text),
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            elevation: 0,
+            splashFactory: NoSplash.splashFactory,
+            foregroundColor: Theme.of(context).brightness == Brightness.dark
+                ? ColorsUtils.lighten(theme.btnBackgroundColor, 1)
+                : ColorsUtils.darken(theme.btnBackgroundColor, 1),
+            backgroundColor: theme.btnBackgroundColor,
+            padding: EdgeInsets.zero,
+            minimumSize: Size.zero,
+          ),
+          child: Center(
+            child: Text(
+              widget.isShifted
+                  ? widget.text.toUpperCase()
+                  : widget.text.toLowerCase(),
+              style: theme.btnTextStyle,
+            ),
           ),
         ),
       ),
