@@ -15,6 +15,7 @@ typedef Layout = List<List>;
 class AlphanumericKeyboard extends BaseKeyboard {
   final String shiftIcon;
   final String shiftActiveIcon;
+  final bool hideSpaceText;
   final Layout layout;
   late final FluteKeyboardTheme theme;
 
@@ -28,6 +29,7 @@ class AlphanumericKeyboard extends BaseKeyboard {
     required this.shiftActiveIcon,
     required this.layout,
     FluteKeyboardTheme? theme,
+    this.hideSpaceText = false,
   }) {
     this.theme = theme ?? FluteKeyboardTheme();
   }
@@ -159,7 +161,7 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
     return Expanded(
       flex: 3,
       child: SpecialKey(
-        text: 'space',
+        text: widget.hideSpaceText ? '' : 'space',
         backgroundColor: theme.btnBackgroundColor,
         onPressed: () {
           // Cursor is at the end of the text.
