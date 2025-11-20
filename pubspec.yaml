@@ -1,6 +1,6 @@
 name: flutekeyboard
 description: "Fully customizable, multi-lanugage virtual keyboard for embedded projects"
-version: 0.2.0
+version: 0.3.0
 repository: https://github.com/amarula/flutekeyboard
 homepage: https://github.com/amarula/flutekeyboard
 

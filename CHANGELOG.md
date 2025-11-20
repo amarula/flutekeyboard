@@ -1,3 +1,7 @@
+## 0.3.0
+
+* Add option to hide 'space' text
+
 ## 0.2.0
 
 * Add button visual feedback
