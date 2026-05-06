@@ -87,4 +87,12 @@ class Buttons {
       ),
     );
   }
+
+  static Widget blankButton() {
+    return Expanded(
+      child: Container(
+        color: Colors.transparent,
+      ),
+    );
+  }
 }
