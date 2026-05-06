@@ -66,7 +66,7 @@ class _NumericKeyboardState extends State<NumericKeyboard> {
         case SpecialKeys.returnK:
           return Buttons.returnButton(widget.onReturn, icon: widget.returnIcon);
         default:
-          return const Placeholder();
+          return Buttons.blankButton();
       }
     }
 
