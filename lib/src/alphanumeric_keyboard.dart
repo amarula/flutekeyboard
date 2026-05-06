@@ -114,6 +114,8 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
           return _symbol2Button();
         case SpecialKeys.alpha:
           return _alphaButton();
+        case SpecialKeys.blank:
+          return Buttons.blankButton();
         case SpecialKeys.returnK:
           return Buttons.returnButton(widget.onReturn, icon: widget.returnIcon);
       }
