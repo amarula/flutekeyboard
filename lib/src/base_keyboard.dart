@@ -1,6 +1,8 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+typedef Layout = List<List>;
+
 abstract class BaseKeyboard extends StatefulWidget {
   final TextEditingController textController;
   final String backspaceIcon;
