@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 // Project imports:
 import 'package:flutekeyboard/flutekeyboard_theme.dart';
 import 'package:flutekeyboard/layouts/en_layout.dart';
+import 'package:flutekeyboard/layouts/numeric_layout.dart';
 import 'package:flutekeyboard/src/alphanumeric_keyboard.dart';
+import 'package:flutekeyboard/src/base_keyboard.dart';
 import 'package:flutekeyboard/src/numeric_keyboard.dart';
 
 enum FluteKeyboardType { numeric, alphanumeric }
@@ -22,6 +24,7 @@ class FluteKeyboard extends StatefulWidget {
   final String backspaceIcon;
   final bool hideSpaceText;
   final Layout alphanumericLayout;
+  final Layout numericLayout;
 
   final String returnIcon;
   final VoidCallback onReturn;
@@ -40,6 +43,7 @@ class FluteKeyboard extends StatefulWidget {
     this.height = 240,
     FluteKeyboardTheme? theme,
     this.alphanumericLayout = EnLayout.layout,
+    this.numericLayout = NumericLayout.layout,
     this.returnIcon = '',
     this.hideSpaceText = false,
   }) {
@@ -56,6 +60,7 @@ class _FluteKeyboardState extends State<FluteKeyboard> {
       return NumericKeyboard(
         textController: widget.textController,
         backspaceIcon: widget.backspaceIcon,
+        layout: widget.numericLayout,
         returnIcon: widget.returnIcon,
         onReturn: widget.onReturn,
       );

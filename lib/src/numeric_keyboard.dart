@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 // Project imports:
 import 'package:flutekeyboard/flutekeyboard_theme.dart';
-import 'package:flutekeyboard/layouts/numeric_layout.dart';
 import 'package:flutekeyboard/src/base_keyboard.dart';
 import 'package:flutekeyboard/src/buttons.dart';
 import 'package:flutekeyboard/src/icon_key.dart';
@@ -11,13 +10,16 @@ import 'package:flutekeyboard/src/special_key.dart';
 import 'package:flutekeyboard/src/text_key.dart';
 
 class NumericKeyboard extends BaseKeyboard {
+  final Layout layout;
   late final FluteKeyboardTheme theme;
+
   NumericKeyboard({
     super.key,
     required super.textController,
     required super.backspaceIcon,
     required super.returnIcon,
     required super.onReturn,
+    required this.layout,
     FluteKeyboardTheme? theme,
   }) {
     this.theme = theme ?? FluteKeyboardTheme();
@@ -31,7 +33,7 @@ class _NumericKeyboardState extends State<NumericKeyboard> {
   final double _columnSpacing = 8;
   final double _rowSpacing = 12;
 
-  final List<List> _currentLayout = NumericLayout.layout;
+  List<List> _currentLayout = [];
 
   final List<List<Widget>> _rows = [];
 
@@ -77,7 +79,7 @@ class _NumericKeyboardState extends State<NumericKeyboard> {
     return Expanded(
       child: TextKey(
         text: text,
-        isShifted: false,
+        isShifted: true,
         textController: widget.textController,
         theme: widget.theme,
       ),
@@ -86,6 +88,7 @@ class _NumericKeyboardState extends State<NumericKeyboard> {
 
   @override
   void initState() {
+    _currentLayout = widget.layout;
     _reloadLayout();
     super.initState();
   }

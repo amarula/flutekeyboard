@@ -1,4 +1,5 @@
 // Flutter imports:
+import 'package:example/custom_numeric_layout.dart';
 import 'package:flutekeyboard/flutekeyboard_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -130,6 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 width: 800,
                 type: type,
                 alphanumericLayout: CustomLayout.layout,
+                numericLayout: CustomNumericLayout.layout,
                 textController: _textController,
                 theme: theme,
                 backspaceIcon: 'assets/backspace.png',
