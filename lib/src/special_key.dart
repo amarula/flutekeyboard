@@ -12,6 +12,7 @@ enum SpecialKeys {
   alpha,
   returnK,
   blank,
+  layout,
 }
 
 class SpecialKey extends StatefulWidget {

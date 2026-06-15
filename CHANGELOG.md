@@ -1,3 +1,7 @@
+## 0.4.0
+
+* Add integrated layout picker button to switch keyboard layout at runtime
+
 ## 0.3.0
 
 * Add option to hide 'space' text

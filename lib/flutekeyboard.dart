@@ -4,6 +4,7 @@ library;
 import 'package:flutter/material.dart';
 
 // Project imports:
+import 'package:flutekeyboard/flutekeyboard_layout.dart';
 import 'package:flutekeyboard/flutekeyboard_theme.dart';
 import 'package:flutekeyboard/layouts/en_layout.dart';
 import 'package:flutekeyboard/layouts/numeric_layout.dart';
@@ -11,7 +12,7 @@ import 'package:flutekeyboard/src/alphanumeric_keyboard.dart';
 import 'package:flutekeyboard/src/base_keyboard.dart';
 import 'package:flutekeyboard/src/numeric_keyboard.dart';
 
-enum FluteKeyboardType { numeric, alphanumeric }
+enum FluteKeyboardType { numeric, alphanumeric, multiLayout }
 
 class FluteKeyboard extends StatefulWidget {
   final FluteKeyboardType type;
@@ -25,6 +26,9 @@ class FluteKeyboard extends StatefulWidget {
   final bool hideSpaceText;
   final Layout alphanumericLayout;
   final Layout numericLayout;
+  final List<FluteLayout> multiLayouts;
+  final FluteLayout? initialMultiLayout;
+  final ValueChanged<FluteLayout>? onMultiLayoutChanged;
 
   final String returnIcon;
   final VoidCallback onReturn;
@@ -44,9 +48,16 @@ class FluteKeyboard extends StatefulWidget {
     FluteKeyboardTheme? theme,
     this.alphanumericLayout = EnLayout.layout,
     this.numericLayout = NumericLayout.layout,
+    this.multiLayouts = const [],
+    this.initialMultiLayout,
+    this.onMultiLayoutChanged,
     this.returnIcon = '',
     this.hideSpaceText = false,
-  }) {
+  }) : assert(
+          initialMultiLayout == null ||
+              multiLayouts.contains(initialMultiLayout),
+          'initialMultiLayout must be one of the provided multiLayouts',
+        ) {
     this.theme = theme ?? FluteKeyboardTheme();
   }
 
@@ -55,8 +66,22 @@ class FluteKeyboard extends StatefulWidget {
 }
 
 class _FluteKeyboardState extends State<FluteKeyboard> {
-  Widget keyboard(FluteKeyboardType keyboardType) {
-    if (keyboardType == FluteKeyboardType.numeric) {
+  FluteLayout? _pickedLayout;
+
+  @override
+  void didUpdateWidget(FluteKeyboard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Make sure _pickedLayout cannot become stale when changing properties
+    if (widget.type != FluteKeyboardType.multiLayout ||
+        widget.multiLayouts != oldWidget.multiLayouts ||
+        (_pickedLayout != null &&
+            !widget.multiLayouts.contains(_pickedLayout))) {
+      _pickedLayout = null;
+    }
+  }
+
+  Widget keyboard() {
+    if (widget.type == FluteKeyboardType.numeric) {
       return NumericKeyboard(
         textController: widget.textController,
         backspaceIcon: widget.backspaceIcon,
@@ -66,15 +91,30 @@ class _FluteKeyboardState extends State<FluteKeyboard> {
       );
     }
 
+    final isMultiLayout = widget.type == FluteKeyboardType.multiLayout;
+    final selectedLayout = isMultiLayout
+        ? (_pickedLayout ??
+            widget.initialMultiLayout ??
+            (widget.multiLayouts.isNotEmpty ? widget.multiLayouts.first : null))
+        : null;
+
     return AlphanumericKeyboard(
       textController: widget.textController,
       shiftIcon: widget.shiftIcon,
       shiftActiveIcon: widget.shiftActiveIcon,
       backspaceIcon: widget.backspaceIcon,
       hideSpaceText: widget.hideSpaceText,
-      layout: widget.alphanumericLayout,
+      layout: selectedLayout?.layout ?? widget.alphanumericLayout,
       returnIcon: widget.returnIcon,
       onReturn: widget.onReturn,
+      layouts: isMultiLayout ? widget.multiLayouts : const [],
+      selectedLayout: selectedLayout,
+      onLayoutChanged: (layout) {
+        setState(() {
+          _pickedLayout = layout;
+        });
+        widget.onMultiLayoutChanged?.call(layout);
+      },
     );
   }
 
@@ -87,7 +127,7 @@ class _FluteKeyboardState extends State<FluteKeyboard> {
       height: widget.height,
       decoration: BoxDecoration(color: theme.backgroundColor),
       padding: const EdgeInsets.all(8),
-      child: keyboard(widget.type),
+      child: keyboard(),
     );
   }
 }

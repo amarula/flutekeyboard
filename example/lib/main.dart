@@ -1,13 +1,14 @@
 // Flutter imports:
-import 'package:example/custom_numeric_layout.dart';
-import 'package:flutekeyboard/flutekeyboard_theme.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutekeyboard/flutekeyboard.dart';
+import 'package:flutekeyboard/flutekeyboard_layout.dart';
+import 'package:flutekeyboard/flutekeyboard_theme.dart';
 
 // Project imports:
 import 'package:example/custom_layout.dart';
+import 'package:example/custom_numeric_layout.dart';
 
 void main() {
   runApp(const MyApp());
@@ -107,11 +108,8 @@ class _MyHomePageState extends State<MyHomePage> {
             TextButton(
               onPressed: () => setState(
                 () {
-                  if (type == FluteKeyboardType.alphanumeric) {
-                    type = FluteKeyboardType.numeric;
-                  } else {
-                    type = FluteKeyboardType.alphanumeric;
-                  }
+                  const types = FluteKeyboardType.values;
+                  type = types[(type.index + 1) % types.length];
                 },
               ),
               style: TextButton.styleFrom(
@@ -132,6 +130,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 type: type,
                 alphanumericLayout: CustomLayout.layout,
                 numericLayout: CustomNumericLayout.layout,
+                multiLayouts: const [
+                  FluteLayout.en,
+                  FluteLayout.it,
+                  FluteLayout.de,
+                  FluteLayout.fr,
+                ],
+                initialMultiLayout: FluteLayout.en,
+                onMultiLayoutChanged: (layout) {
+                  // ignore: avoid_print
+                  print('Layout changed to ${layout.displayName}');
+                },
                 textController: _textController,
                 theme: theme,
                 backspaceIcon: 'assets/backspace.png',
