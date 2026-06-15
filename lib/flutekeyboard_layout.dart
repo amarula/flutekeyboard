@@ -1,5 +1,8 @@
 library;
 
+// Flutter imports:
+import 'package:flutter/foundation.dart';
+
 // Project imports:
 import 'package:flutekeyboard/layouts/cs_layout.dart';
 import 'package:flutekeyboard/layouts/de_layout.dart';
@@ -59,7 +62,7 @@ class FluteLayout {
       other is FluteLayout &&
       other.code == code &&
       other.displayName == displayName &&
-      other.layout == layout;
+      listEquals(other.layout, layout);
 
   @override
   int get hashCode => Object.hash(code, displayName, layout);

@@ -1,6 +1,7 @@
 library;
 
 // Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
@@ -73,7 +74,7 @@ class _FluteKeyboardState extends State<FluteKeyboard> {
     super.didUpdateWidget(oldWidget);
     // Make sure _pickedLayout cannot become stale when changing properties
     if (widget.type != FluteKeyboardType.multiLayout ||
-        widget.multiLayouts != oldWidget.multiLayouts ||
+        !listEquals(widget.multiLayouts, oldWidget.multiLayouts) ||
         (_pickedLayout != null &&
             !widget.multiLayouts.contains(_pickedLayout))) {
       _pickedLayout = null;

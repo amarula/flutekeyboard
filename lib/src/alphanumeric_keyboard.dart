@@ -352,7 +352,8 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
   @override
   void didUpdateWidget(AlphanumericKeyboard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.layout != oldWidget.layout) {
+    if (widget.layout != oldWidget.layout ||
+        widget.layouts.length != oldWidget.layouts.length) {
       _currentLayout = widget.layout;
       _reloadLayout();
     }
