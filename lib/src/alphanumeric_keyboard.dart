@@ -93,14 +93,11 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
     _row3.add(Padding(padding: EdgeInsets.only(left: _columnSpacing * 2)));
     _row3.add(_button(_currentLayout[2][_currentLayout[2].length - 1]));
 
-    // Insert the layout switcher just before the space key when more than one
-    // layout is available and the layout doesn't already define it.
     final multiLayout = widget.layouts.length > 1;
     final hasLayoutKey =
         _currentLayout.any((row) => row.contains(SpecialKeys.layout));
     var addLayoutKey = multiLayout && !hasLayoutKey;
 
-    // Fall back to prepending it if the row has no space key to anchor to.
     if (addLayoutKey && !_currentLayout[3].contains(SpecialKeys.space)) {
       _row4.add(_button(SpecialKeys.layout));
       _row4.add(Padding(padding: EdgeInsets.only(left: _columnSpacing)));
@@ -190,15 +187,11 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
   Widget _spaceButton() {
     final theme = FluteKeyboardTheme();
 
-    // When multiple layouts are available, the space bar shows the code of the
-    // currently selected layout (e.g. "EN") instead of the "space" label.
     final multiLayout = widget.layouts.length > 1;
     final spaceText = multiLayout
         ? (widget.selectedLayout?.code ?? '')
         : (widget.hideSpaceText ? '' : 'space');
 
-    // The layout code is informational only, so render it dimmed to look
-    // disabled/grayed out while keeping the space key fully functional.
     final baseColor = theme.btnTextStyle.color ?? Colors.white;
     final spaceTextStyle = multiLayout
         ? theme.btnTextStyle.copyWith(color: baseColor.withValues(alpha: 0.4))
@@ -290,8 +283,6 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
   Widget _layoutButton() {
     final theme = FluteKeyboardTheme();
 
-    // A small, square button placed between the symbols and space keys. It
-    // shows the customizable language icon.
     return AspectRatio(
       aspectRatio: 1,
       child: Builder(
