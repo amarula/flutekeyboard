@@ -353,7 +353,8 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
   void didUpdateWidget(AlphanumericKeyboard oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.layout != oldWidget.layout ||
-        widget.layouts.length != oldWidget.layouts.length) {
+        widget.layouts.length != oldWidget.layouts.length ||
+        widget.selectedLayout != oldWidget.selectedLayout) {
       _currentLayout = widget.layout;
       _reloadLayout();
     }
