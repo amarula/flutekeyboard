@@ -2,10 +2,12 @@
 import 'package:flutter/material.dart';
 
 // Project imports:
+import 'package:flutekeyboard/flutekeyboard_layout.dart';
 import 'package:flutekeyboard/flutekeyboard_theme.dart';
 import 'package:flutekeyboard/layouts/symbol_layout.dart';
 import 'package:flutekeyboard/src/base_keyboard.dart';
 import 'package:flutekeyboard/src/buttons.dart';
+import 'package:flutekeyboard/src/colors_utils.dart';
 import 'package:flutekeyboard/src/icon_key.dart';
 import 'package:flutekeyboard/src/special_key.dart';
 import 'package:flutekeyboard/src/text_key.dart';
@@ -13,8 +15,12 @@ import 'package:flutekeyboard/src/text_key.dart';
 class AlphanumericKeyboard extends BaseKeyboard {
   final String shiftIcon;
   final String shiftActiveIcon;
+  final String languageIcon;
   final bool hideSpaceText;
   final Layout layout;
+  final List<FluteLayout> layouts;
+  final FluteLayout? selectedLayout;
+  final ValueChanged<FluteLayout>? onLayoutChanged;
   late final FluteKeyboardTheme theme;
 
   AlphanumericKeyboard({
@@ -27,7 +33,11 @@ class AlphanumericKeyboard extends BaseKeyboard {
     required this.shiftActiveIcon,
     required this.layout,
     FluteKeyboardTheme? theme,
+    this.languageIcon = '',
     this.hideSpaceText = false,
+    this.layouts = const [],
+    this.selectedLayout,
+    this.onLayoutChanged,
   }) {
     this.theme = theme ?? FluteKeyboardTheme();
   }
@@ -83,8 +93,25 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
     _row3.add(Padding(padding: EdgeInsets.only(left: _columnSpacing * 2)));
     _row3.add(_button(_currentLayout[2][_currentLayout[2].length - 1]));
 
+    final multiLayout = widget.layouts.length > 1;
+    final hasLayoutKey =
+        _currentLayout.any((row) => row.contains(SpecialKeys.layout));
+    var addLayoutKey = multiLayout && !hasLayoutKey;
+
+    if (addLayoutKey && !_currentLayout[3].contains(SpecialKeys.space)) {
+      _row4.add(_button(SpecialKeys.layout));
+      _row4.add(Padding(padding: EdgeInsets.only(left: _columnSpacing)));
+      addLayoutKey = false;
+    }
+
     for (var i = 0; i < _currentLayout[3].length; i++) {
-      _row4.add(_button(_currentLayout[3][i]));
+      final key = _currentLayout[3][i];
+      if (addLayoutKey && key == SpecialKeys.space) {
+        _row4.add(_button(SpecialKeys.layout));
+        _row4.add(Padding(padding: EdgeInsets.only(left: _columnSpacing)));
+        addLayoutKey = false;
+      }
+      _row4.add(_button(key));
       if (i < _currentLayout[3].length - 1) {
         _row4.add(Padding(padding: EdgeInsets.only(left: _columnSpacing)));
       }
@@ -114,6 +141,8 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
           return _alphaButton();
         case SpecialKeys.blank:
           return Buttons.blankButton();
+        case SpecialKeys.layout:
+          return _layoutButton();
         case SpecialKeys.returnK:
           return Buttons.returnButton(widget.onReturn, icon: widget.returnIcon);
       }
@@ -158,10 +187,21 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
   Widget _spaceButton() {
     final theme = FluteKeyboardTheme();
 
+    final multiLayout = widget.layouts.length > 1;
+    final spaceText = multiLayout
+        ? (widget.selectedLayout?.code ?? '')
+        : (widget.hideSpaceText ? '' : 'space');
+
+    final baseColor = theme.btnTextStyle.color ?? Colors.white;
+    final spaceTextStyle = multiLayout
+        ? theme.btnTextStyle.copyWith(color: baseColor.withValues(alpha: 0.4))
+        : null;
+
     return Expanded(
       flex: 3,
       child: SpecialKey(
-        text: widget.hideSpaceText ? '' : 'space',
+        text: spaceText,
+        textStyle: spaceTextStyle,
         backgroundColor: theme.btnBackgroundColor,
         onPressed: () {
           // Cursor is at the end of the text.
@@ -240,11 +280,105 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
     );
   }
 
+  Widget _layoutButton() {
+    final theme = FluteKeyboardTheme();
+
+    return AspectRatio(
+      aspectRatio: 1,
+      child: Builder(
+        builder: (context) => IconKey(
+          icon: widget.languageIcon,
+          backgroundColor: theme.btnSpecialBackgroundColor,
+          onPressed: () => _showLayoutPicker(context),
+        ),
+      ),
+    );
+  }
+
+  Color _foregroundColor(BuildContext context, Color backgroundColor) {
+    return Theme.of(context).brightness == Brightness.dark
+        ? ColorsUtils.lighten(backgroundColor, 1)
+        : ColorsUtils.darken(backgroundColor, 1);
+  }
+
+  Future<void> _showLayoutPicker(BuildContext buttonContext) async {
+    final theme = FluteKeyboardTheme();
+    final renderBox = buttonContext.findRenderObject() as RenderBox;
+    final overlay =
+        Overlay.of(buttonContext).context.findRenderObject() as RenderBox;
+    final position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        renderBox.localToGlobal(Offset.zero, ancestor: overlay),
+        renderBox.localToGlobal(
+          renderBox.size.bottomRight(Offset.zero),
+          ancestor: overlay,
+        ),
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    final selected = await showMenu<FluteLayout>(
+      context: buttonContext,
+      position: position,
+      color: theme.backgroundColor,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      items: [
+        for (final layout in widget.layouts)
+          PopupMenuItem<FluteLayout>(
+            value: layout,
+            padding: const EdgeInsets.all(6),
+            child: Container(
+              height: 44,
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: layout == widget.selectedLayout
+                    ? theme.btnSpecialBackgroundColor
+                    : theme.btnBackgroundColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                layout.displayName,
+                style: theme.btnTextStyle.copyWith(
+                  color: _foregroundColor(
+                    buttonContext,
+                    layout == widget.selectedLayout
+                        ? theme.btnSpecialBackgroundColor
+                        : theme.btnBackgroundColor,
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+
+    if (!mounted || selected == null || selected == widget.selectedLayout) {
+      return;
+    }
+
+    widget.onLayoutChanged?.call(selected);
+  }
+
   @override
   void initState() {
     _currentLayout = widget.layout;
     _reloadLayout();
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(AlphanumericKeyboard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.layout != oldWidget.layout ||
+        widget.layouts.length != oldWidget.layouts.length ||
+        widget.selectedLayout != oldWidget.selectedLayout) {
+      _currentLayout = widget.layout;
+      _reloadLayout();
+    }
   }
 
   @override

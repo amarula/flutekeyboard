@@ -1,13 +1,14 @@
 // Flutter imports:
-import 'package:example/custom_numeric_layout.dart';
-import 'package:flutekeyboard/flutekeyboard_theme.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutekeyboard/flutekeyboard.dart';
+import 'package:flutekeyboard/flutekeyboard_layout.dart';
+import 'package:flutekeyboard/flutekeyboard_theme.dart';
 
 // Project imports:
 import 'package:example/custom_layout.dart';
+import 'package:example/custom_numeric_layout.dart';
 
 void main() {
   runApp(const MyApp());
@@ -107,11 +108,8 @@ class _MyHomePageState extends State<MyHomePage> {
             TextButton(
               onPressed: () => setState(
                 () {
-                  if (type == FluteKeyboardType.alphanumeric) {
-                    type = FluteKeyboardType.numeric;
-                  } else {
-                    type = FluteKeyboardType.alphanumeric;
-                  }
+                  const types = FluteKeyboardType.values;
+                  type = types[(type.index + 1) % types.length];
                 },
               ),
               style: TextButton.styleFrom(
@@ -130,13 +128,28 @@ class _MyHomePageState extends State<MyHomePage> {
               child: FluteKeyboard(
                 width: 800,
                 type: type,
-                alphanumericLayout: CustomLayout.layout,
+                alphanumericLayouts: const [
+                  FluteLayout(
+                    code: 'EN',
+                    displayName: 'English',
+                    layout: CustomLayout.layout,
+                  ),
+                  FluteLayout.it,
+                  FluteLayout.de,
+                  FluteLayout.fr,
+                ],
+                initialAlphanumericLayout: FluteLayout.it,
+                onAlphanumericLayoutChanged: (layout) {
+                  // ignore: avoid_print
+                  print('Layout changed to ${layout.displayName}');
+                },
                 numericLayout: CustomNumericLayout.layout,
                 textController: _textController,
                 theme: theme,
                 backspaceIcon: 'assets/backspace.png',
                 shiftIcon: 'assets/shift.png',
                 shiftActiveIcon: 'assets/shift_active.png',
+                languageIcon: 'assets/language.png',
                 hideSpaceText: true,
                 onReturn: () {
                   // ignore: avoid_print

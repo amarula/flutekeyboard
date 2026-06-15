@@ -86,9 +86,12 @@ import 'package:flutekeyboard/flutekeyboard_keys.dart';
 
 ```dart
 import 'package:flutekeyboard/flutekeyboard_keys.dart';
+import 'package:flutekeyboard/flutekeyboard_layout.dart';
 
-class CustomLayout {
-  static const List<List> layout = [
+const FluteLayout customLayout = FluteLayout(
+  code: 'EN',
+  displayName: 'English',
+  layout: [
     [
       '1',
       '2',
@@ -128,8 +131,25 @@ class CustomLayout {
       SpecialKeys.space,
       SpecialKeys.returnK,
     ],
-  ];
-}
+  ],
+);
+```
+
+Pass one or more `FluteLayout`s to `alphanumericLayout`. With two or more, a
+language picker button (icon set via `languageIcon`) is shown to switch between
+them at runtime:
+
+```dart
+FluteKeyboard(
+  // ...other parameters
+  alphanumericLayouts: const [
+    customLayout,
+    FluteLayout.it,
+  ],
+  initialAlphanumericLayout: customLayout,
+  languageIcon: 'assets/language.png',
+  onAlphanumericLayoutChanged: (layout) => print(layout.displayName),
+)
 ```
 
 ![Custom Alphanumeric Keyboard](screenshots/custom_alphanum_keyboard.png)
