@@ -82,43 +82,16 @@ import 'package:flutekeyboard/flutekeyboard_keys.dart';
 
 ![Basic Alphanumeric Keyboard](screenshots/basic_alphanum_keyboard.png)
 
-### Language / Layout Picker
-
-Set `type: FluteKeyboardType.multiLayout` and pass `multiLayouts` to add a picker
-button (shown automatically once two or more layouts are provided) to the bottom
-row. Tapping it opens a menu to switch layout at runtime. Use `initialMultiLayout`
-to set the starting layout (defaults to the first entry).
-
-Each `FluteLayout` carries its own key grid, so a custom layout is just another
-entry — give it a `code` (button label), a `displayName` (menu label) and a key
-grid (see [Custom Alphanumeric Layout](#custom-alphanumeric-layout)). The same
-approach overrides a built-in layout.
-
-```dart
-import 'package:flutekeyboard/flutekeyboard_layout.dart';
-
-const swedish = FluteLayout(
-  code: 'SV',
-  displayName: 'Svenska',
-  layout: SwedishLayout.layout,
-);
-
-FluteKeyboard(
-  // ...other parameters
-  type: FluteKeyboardType.multiLayout,
-  multiLayouts: const [FluteLayout.en, FluteLayout.it, swedish],
-  initialMultiLayout: FluteLayout.en,
-  onMultiLayoutChanged: (layout) => print(layout.displayName),
-)
-```
-
 ### Custom Alphanumeric Layout
 
 ```dart
 import 'package:flutekeyboard/flutekeyboard_keys.dart';
+import 'package:flutekeyboard/flutekeyboard_layout.dart';
 
-class CustomLayout {
-  static const List<List> layout = [
+const FluteLayout customLayout = FluteLayout(
+  code: 'EN',
+  displayName: 'English',
+  layout: [
     [
       '1',
       '2',
@@ -158,8 +131,25 @@ class CustomLayout {
       SpecialKeys.space,
       SpecialKeys.returnK,
     ],
-  ];
-}
+  ],
+);
+```
+
+Pass one or more `FluteLayout`s to `alphanumericLayout`. With two or more, a
+language picker button (icon set via `languageIcon`) is shown to switch between
+them at runtime:
+
+```dart
+FluteKeyboard(
+  // ...other parameters
+  alphanumericLayouts: const [
+    customLayout,
+    FluteLayout.it,
+  ],
+  initialAlphanumericLayout: customLayout,
+  languageIcon: 'assets/language.png',
+  onAlphanumericLayoutChanged: (layout) => print(layout.displayName),
+)
 ```
 
 ![Custom Alphanumeric Keyboard](screenshots/custom_alphanum_keyboard.png)

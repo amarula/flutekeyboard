@@ -128,24 +128,28 @@ class _MyHomePageState extends State<MyHomePage> {
               child: FluteKeyboard(
                 width: 800,
                 type: type,
-                alphanumericLayout: CustomLayout.layout,
-                numericLayout: CustomNumericLayout.layout,
-                multiLayouts: const [
-                  FluteLayout.en,
+                alphanumericLayouts: const [
+                  FluteLayout(
+                    code: 'EN',
+                    displayName: 'English',
+                    layout: CustomLayout.layout,
+                  ),
                   FluteLayout.it,
                   FluteLayout.de,
                   FluteLayout.fr,
                 ],
-                initialMultiLayout: FluteLayout.en,
-                onMultiLayoutChanged: (layout) {
+                initialAlphanumericLayout: FluteLayout.it,
+                onAlphanumericLayoutChanged: (layout) {
                   // ignore: avoid_print
                   print('Layout changed to ${layout.displayName}');
                 },
+                numericLayout: CustomNumericLayout.layout,
                 textController: _textController,
                 theme: theme,
                 backspaceIcon: 'assets/backspace.png',
                 shiftIcon: 'assets/shift.png',
                 shiftActiveIcon: 'assets/shift_active.png',
+                languageIcon: 'assets/language.png',
                 hideSpaceText: true,
                 onReturn: () {
                   // ignore: avoid_print

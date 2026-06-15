@@ -7,13 +7,12 @@ import 'package:flutter/material.dart';
 // Project imports:
 import 'package:flutekeyboard/flutekeyboard_layout.dart';
 import 'package:flutekeyboard/flutekeyboard_theme.dart';
-import 'package:flutekeyboard/layouts/en_layout.dart';
 import 'package:flutekeyboard/layouts/numeric_layout.dart';
 import 'package:flutekeyboard/src/alphanumeric_keyboard.dart';
 import 'package:flutekeyboard/src/base_keyboard.dart';
 import 'package:flutekeyboard/src/numeric_keyboard.dart';
 
-enum FluteKeyboardType { numeric, alphanumeric, multiLayout }
+enum FluteKeyboardType { numeric, alphanumeric }
 
 class FluteKeyboard extends StatefulWidget {
   final FluteKeyboardType type;
@@ -24,12 +23,12 @@ class FluteKeyboard extends StatefulWidget {
   final String shiftIcon;
   final String shiftActiveIcon;
   final String backspaceIcon;
+  final String languageIcon;
   final bool hideSpaceText;
-  final Layout alphanumericLayout;
+  final List<FluteLayout> alphanumericLayouts;
+  final FluteLayout? initialAlphanumericLayout;
+  final ValueChanged<FluteLayout>? onAlphanumericLayoutChanged;
   final Layout numericLayout;
-  final List<FluteLayout> multiLayouts;
-  final FluteLayout? initialMultiLayout;
-  final ValueChanged<FluteLayout>? onMultiLayoutChanged;
 
   final String returnIcon;
   final VoidCallback onReturn;
@@ -47,17 +46,22 @@ class FluteKeyboard extends StatefulWidget {
     this.width = 480,
     this.height = 240,
     FluteKeyboardTheme? theme,
-    this.alphanumericLayout = EnLayout.layout,
+    this.alphanumericLayouts = const [FluteLayout.en],
+    this.initialAlphanumericLayout,
+    this.onAlphanumericLayoutChanged,
     this.numericLayout = NumericLayout.layout,
-    this.multiLayouts = const [],
-    this.initialMultiLayout,
-    this.onMultiLayoutChanged,
     this.returnIcon = '',
+    this.languageIcon = '',
     this.hideSpaceText = false,
   }) : assert(
-          initialMultiLayout == null ||
-              multiLayouts.contains(initialMultiLayout),
-          'initialMultiLayout must be one of the provided multiLayouts',
+          alphanumericLayouts.isNotEmpty,
+          'alphanumericLayouts must contain at least one layout',
+        ),
+        assert(
+          initialAlphanumericLayout == null ||
+              alphanumericLayouts.contains(initialAlphanumericLayout),
+          'initialAlphanumericLayout must be one of the provided '
+          'alphanumericLayout entries',
         ) {
     this.theme = theme ?? FluteKeyboardTheme();
   }
@@ -73,10 +77,9 @@ class _FluteKeyboardState extends State<FluteKeyboard> {
   void didUpdateWidget(FluteKeyboard oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Make sure _pickedLayout cannot become stale when changing properties
-    if (widget.type != FluteKeyboardType.multiLayout ||
-        !listEquals(widget.multiLayouts, oldWidget.multiLayouts) ||
+    if (!listEquals(widget.alphanumericLayouts, oldWidget.alphanumericLayouts) ||
         (_pickedLayout != null &&
-            !widget.multiLayouts.contains(_pickedLayout))) {
+            !widget.alphanumericLayouts.contains(_pickedLayout))) {
       _pickedLayout = null;
     }
   }
@@ -92,12 +95,9 @@ class _FluteKeyboardState extends State<FluteKeyboard> {
       );
     }
 
-    final isMultiLayout = widget.type == FluteKeyboardType.multiLayout;
-    final selectedLayout = isMultiLayout
-        ? (_pickedLayout ??
-            widget.initialMultiLayout ??
-            (widget.multiLayouts.isNotEmpty ? widget.multiLayouts.first : null))
-        : null;
+    final selectedLayout = _pickedLayout ??
+        widget.initialAlphanumericLayout ??
+        widget.alphanumericLayouts.first;
 
     return AlphanumericKeyboard(
       textController: widget.textController,
@@ -105,16 +105,17 @@ class _FluteKeyboardState extends State<FluteKeyboard> {
       shiftActiveIcon: widget.shiftActiveIcon,
       backspaceIcon: widget.backspaceIcon,
       hideSpaceText: widget.hideSpaceText,
-      layout: selectedLayout?.layout ?? widget.alphanumericLayout,
+      layout: selectedLayout.layout,
       returnIcon: widget.returnIcon,
+      languageIcon: widget.languageIcon,
       onReturn: widget.onReturn,
-      layouts: isMultiLayout ? widget.multiLayouts : const [],
+      layouts: widget.alphanumericLayouts,
       selectedLayout: selectedLayout,
       onLayoutChanged: (layout) {
         setState(() {
           _pickedLayout = layout;
         });
-        widget.onMultiLayoutChanged?.call(layout);
+        widget.onAlphanumericLayoutChanged?.call(layout);
       },
     );
   }

@@ -15,6 +15,7 @@ import 'package:flutekeyboard/src/text_key.dart';
 class AlphanumericKeyboard extends BaseKeyboard {
   final String shiftIcon;
   final String shiftActiveIcon;
+  final String languageIcon;
   final bool hideSpaceText;
   final Layout layout;
   final List<FluteLayout> layouts;
@@ -32,6 +33,7 @@ class AlphanumericKeyboard extends BaseKeyboard {
     required this.shiftActiveIcon,
     required this.layout,
     FluteKeyboardTheme? theme,
+    this.languageIcon = '',
     this.hideSpaceText = false,
     this.layouts = const [],
     this.selectedLayout,
@@ -91,18 +93,28 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
     _row3.add(Padding(padding: EdgeInsets.only(left: _columnSpacing * 2)));
     _row3.add(_button(_currentLayout[2][_currentLayout[2].length - 1]));
 
-    // add the switcher at the beginning of the 4th row if the layout doesn't
-    // define it.
+    // Insert the layout switcher just before the space key when more than one
+    // layout is available and the layout doesn't already define it.
     final multiLayout = widget.layouts.length > 1;
     final hasLayoutKey =
         _currentLayout.any((row) => row.contains(SpecialKeys.layout));
-    if (multiLayout && !hasLayoutKey) {
+    var addLayoutKey = multiLayout && !hasLayoutKey;
+
+    // Fall back to prepending it if the row has no space key to anchor to.
+    if (addLayoutKey && !_currentLayout[3].contains(SpecialKeys.space)) {
       _row4.add(_button(SpecialKeys.layout));
       _row4.add(Padding(padding: EdgeInsets.only(left: _columnSpacing)));
+      addLayoutKey = false;
     }
 
     for (var i = 0; i < _currentLayout[3].length; i++) {
-      _row4.add(_button(_currentLayout[3][i]));
+      final key = _currentLayout[3][i];
+      if (addLayoutKey && key == SpecialKeys.space) {
+        _row4.add(_button(SpecialKeys.layout));
+        _row4.add(Padding(padding: EdgeInsets.only(left: _columnSpacing)));
+        addLayoutKey = false;
+      }
+      _row4.add(_button(key));
       if (i < _currentLayout[3].length - 1) {
         _row4.add(Padding(padding: EdgeInsets.only(left: _columnSpacing)));
       }
@@ -178,10 +190,25 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
   Widget _spaceButton() {
     final theme = FluteKeyboardTheme();
 
+    // When multiple layouts are available, the space bar shows the code of the
+    // currently selected layout (e.g. "EN") instead of the "space" label.
+    final multiLayout = widget.layouts.length > 1;
+    final spaceText = multiLayout
+        ? (widget.selectedLayout?.code ?? '')
+        : (widget.hideSpaceText ? '' : 'space');
+
+    // The layout code is informational only, so render it dimmed to look
+    // disabled/grayed out while keeping the space key fully functional.
+    final baseColor = theme.btnTextStyle.color ?? Colors.white;
+    final spaceTextStyle = multiLayout
+        ? theme.btnTextStyle.copyWith(color: baseColor.withValues(alpha: 0.4))
+        : null;
+
     return Expanded(
       flex: 3,
       child: SpecialKey(
-        text: widget.hideSpaceText ? '' : 'space',
+        text: spaceText,
+        textStyle: spaceTextStyle,
         backgroundColor: theme.btnBackgroundColor,
         onPressed: () {
           // Cursor is at the end of the text.
@@ -263,10 +290,13 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
   Widget _layoutButton() {
     final theme = FluteKeyboardTheme();
 
-    return Expanded(
+    // A small, square button placed between the symbols and space keys. It
+    // shows the customizable language icon.
+    return AspectRatio(
+      aspectRatio: 1,
       child: Builder(
-        builder: (context) => SpecialKey(
-          text: widget.selectedLayout?.code ?? '',
+        builder: (context) => IconKey(
+          icon: widget.languageIcon,
           backgroundColor: theme.btnSpecialBackgroundColor,
           onPressed: () => _showLayoutPicker(context),
         ),

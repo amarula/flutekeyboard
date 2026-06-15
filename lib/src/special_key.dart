@@ -20,6 +20,8 @@ class SpecialKey extends StatefulWidget {
 
   final Color backgroundColor;
 
+  final TextStyle? textStyle;
+
   final Function onPressed;
 
   const SpecialKey({
@@ -27,6 +29,7 @@ class SpecialKey extends StatefulWidget {
     required this.text,
     required this.backgroundColor,
     required this.onPressed,
+    this.textStyle,
   });
 
   @override
@@ -56,7 +59,7 @@ class _SpecialKeyState extends State<SpecialKey> {
       child: Center(
         child: Text(
           widget.text,
-          style: theme.btnTextStyle,
+          style: widget.textStyle ?? theme.btnTextStyle,
         ),
       ),
     );
