@@ -23,6 +23,7 @@ class FluteKeyboard extends StatefulWidget {
   final String shiftActiveIcon;
   final String backspaceIcon;
   final bool hideSpaceText;
+  final bool showSecondaryValues;
   final Layout alphanumericLayout;
   final Layout numericLayout;
 
@@ -46,6 +47,7 @@ class FluteKeyboard extends StatefulWidget {
     this.numericLayout = NumericLayout.layout,
     this.returnIcon = '',
     this.hideSpaceText = false,
+    this.showSecondaryValues = false,
   }) {
     this.theme = theme ?? FluteKeyboardTheme();
   }
@@ -72,6 +74,7 @@ class _FluteKeyboardState extends State<FluteKeyboard> {
       shiftActiveIcon: widget.shiftActiveIcon,
       backspaceIcon: widget.backspaceIcon,
       hideSpaceText: widget.hideSpaceText,
+      showSecondaryValues: widget.showSecondaryValues,
       layout: widget.alphanumericLayout,
       returnIcon: widget.returnIcon,
       onReturn: widget.onReturn,

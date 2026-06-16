@@ -69,6 +69,10 @@ class _MyHomePageState extends State<MyHomePage> {
       color: Colors.black,
       fontSize: 28,
     );
+    theme.btnSecondaryTextStyle = const TextStyle(
+      color: Colors.grey,
+      fontSize: 16,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -138,6 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 shiftIcon: 'assets/shift.png',
                 shiftActiveIcon: 'assets/shift_active.png',
                 hideSpaceText: true,
+                showSecondaryValues: true,
                 onReturn: () {
                   // ignore: avoid_print
                   print(_textController.text);
