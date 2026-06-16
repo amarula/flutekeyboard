@@ -14,6 +14,7 @@ class AlphanumericKeyboard extends BaseKeyboard {
   final String shiftIcon;
   final String shiftActiveIcon;
   final bool hideSpaceText;
+  final bool showSecondaryValues;
   final Layout layout;
   late final FluteKeyboardTheme theme;
 
@@ -28,6 +29,7 @@ class AlphanumericKeyboard extends BaseKeyboard {
     required this.layout,
     FluteKeyboardTheme? theme,
     this.hideSpaceText = false,
+    this.showSecondaryValues = false,
   }) {
     this.theme = theme ?? FluteKeyboardTheme();
   }
@@ -132,6 +134,7 @@ class _AlphanumericKeyboardState extends State<AlphanumericKeyboard> {
         text: mainChar,
         alternatives: alternatives,
         isShifted: _shiftActive,
+        showSecondaryValues: widget.showSecondaryValues,
         textController: widget.textController,
         theme: widget.theme,
       ),
