@@ -192,9 +192,7 @@ class _LongPressKeyState extends State<TextKey> {
             padding: EdgeInsets.zero,
             minimumSize: Size.zero,
           ),
-          child: Center(
-            child: FittedBox(child: _buildKeyContent(theme)),
-          ),
+          child: _buildKeyContent(theme),
         ),
       ),
     );
@@ -204,24 +202,38 @@ class _LongPressKeyState extends State<TextKey> {
       widget.isShifted ? value.toUpperCase() : value.toLowerCase();
 
   Widget _buildKeyContent(FluteKeyboardTheme theme) {
-    if (!widget.showSecondaryValues) {
-      return Text(
-        _applyCase(widget.text),
-        style: theme.btnTextStyle,
-      );
+    final primaryText = Center(
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          _applyCase(widget.text),
+          style: theme.btnTextStyle,
+        ),
+      ),
+    );
+
+    if (!widget.showSecondaryValues || widget.alternatives.isEmpty) {
+      return primaryText;
     }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
+      fit: StackFit.expand,
       children: [
-        Text(
-          _applyCase(widget.alternatives.firstOrNull ?? ' '),
-          style: theme.btnSecondaryTextStyle.copyWith(height: 1),
-        ),
-        Text(
-          _applyCase(widget.text),
-          style: theme.btnTextStyle.copyWith(height: 1),
+        primaryText,
+        Align(
+          alignment: Alignment.topRight,
+          child: FractionallySizedBox(
+            widthFactor: 0.45,
+            heightFactor: 0.5,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                _applyCase(widget.alternatives.first),
+                style: theme.btnSecondaryTextStyle,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
         ),
       ],
     );

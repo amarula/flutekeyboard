@@ -54,6 +54,7 @@ class _SpecialKeyState extends State<SpecialKey> {
       ),
       child: Center(
         child: FittedBox(
+          fit: BoxFit.scaleDown,
           child: Text(
             widget.text,
             style: theme.btnTextStyle,

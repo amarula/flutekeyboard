@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     theme.btnSecondaryTextStyle = const TextStyle(
       color: Colors.grey,
-      fontSize: 16,
+      fontSize: 24,
     );
 
     return Scaffold(
