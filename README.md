@@ -20,7 +20,8 @@
   - More to come
 - **Symbol pages** (e.g., punctuation, special characters)
 - **Custom layout support** – define your own key arrangements
-- **Alternative key support** – long-press secondary keys
+- **Alternative key support** – long-press secondary keys, with optional
+  on-key hints
 
 ## 📦 Installation
 
@@ -153,6 +154,26 @@ FluteKeyboard(
 ```
 
 ![Custom Alphanumeric Keyboard](screenshots/custom_alphanum_keyboard.png)
+
+### Secondary Key Hints
+
+Keys with long-press alternatives can advertise them with a small hint in the
+top-right corner of the key face:
+
+```dart
+FluteKeyboard(
+  // ...other parameters
+  showSecondaryValues: true,
+)
+```
+
+Only the **first** alternative of a key is shown as a hint, so order the
+alternatives in your layout with the most relevant character first (e.g.
+`'eèé'` shows `è` on the `e` key, while the long-press popup still offers
+both `è` and `é`).
+
+The hint is styled through the theme's `btnSecondaryTextStyle`. Its `fontSize`
+acts as a maximum: the hint is automatically scaled down to fit the key.
 
 ## Screenshots
 

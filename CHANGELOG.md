@@ -1,3 +1,9 @@
+## 0.4.0
+
+* Show secondary key values as hints on the key face (showSecondaryValues)
+* Add btnSecondaryTextStyle theme property to style the hints
+* Improve key content scaling when the keyboard is resized
+
 ## 0.3.0
 
 * Add option to hide 'space' text
