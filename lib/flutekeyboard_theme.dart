@@ -13,4 +13,5 @@ class FluteKeyboardTheme {
   Color btnSpecialBackgroundColor = Colors.transparent;
   TextStyle btnTextStyle = const TextStyle(color: Colors.white);
   Color btnReturnColor = Colors.transparent;
+  TextStyle btnSecondaryTextStyle = const TextStyle(color: Colors.grey);
 }
