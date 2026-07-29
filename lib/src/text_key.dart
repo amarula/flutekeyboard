@@ -92,9 +92,12 @@ class _LongPressKeyState extends State<TextKey> {
                     ],
                   ),
                   alignment: Alignment.center,
-                  child: Text(
-                    _applyCase(char),
-                    style: widget.theme.btnTextStyle,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      _applyCase(char),
+                      style: widget.theme.btnTextStyle,
+                    ),
                   ),
                 );
               }),

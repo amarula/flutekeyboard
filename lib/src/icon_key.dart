@@ -74,8 +74,14 @@ class _IconKeyState extends State<IconKey> {
           minimumSize: Size.zero,
         ),
         child: Center(
-          child: Image.asset(
-            widget.icon,
+          child: Padding(
+            padding: const EdgeInsets.all(4),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Image.asset(
+                widget.icon,
+              ),
+            ),
           ),
         ),
       ),
