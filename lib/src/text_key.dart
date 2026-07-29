@@ -9,6 +9,12 @@ class TextKey extends StatefulWidget {
   final String text;
   final List<String> alternatives;
   final bool isShifted;
+
+  /// Advertises the first entry of [alternatives] as a small hint in the
+  /// top-right corner of the key. Only the first alternative is shown, so
+  /// layouts should list the most relevant one first. The hint is styled
+  /// with [FluteKeyboardTheme.btnSecondaryTextStyle]; its fontSize acts as
+  /// a maximum, since the hint is scaled down to fit the key.
   final bool showSecondaryValues;
   final TextEditingController textController;
   late final FluteKeyboardTheme theme;
@@ -30,6 +36,9 @@ class TextKey extends StatefulWidget {
 }
 
 class _LongPressKeyState extends State<TextKey> {
+  static const double _secondaryWidthFactor = 0.45;
+  static const double _secondaryHeightFactor = 0.5;
+
   OverlayEntry? _overlayEntry;
   int _highlightedIndex = -1;
 
@@ -155,8 +164,6 @@ class _LongPressKeyState extends State<TextKey> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = FluteKeyboardTheme();
-
     return GestureDetector(
       onLongPressStart: (details) {
         if (widget.alternatives.isEmpty) {
@@ -186,13 +193,13 @@ class _LongPressKeyState extends State<TextKey> {
             elevation: 0,
             splashFactory: NoSplash.splashFactory,
             foregroundColor: Theme.of(context).brightness == Brightness.dark
-                ? ColorsUtils.lighten(theme.btnBackgroundColor, 1)
-                : ColorsUtils.darken(theme.btnBackgroundColor, 1),
-            backgroundColor: theme.btnBackgroundColor,
+                ? ColorsUtils.lighten(widget.theme.btnBackgroundColor, 1)
+                : ColorsUtils.darken(widget.theme.btnBackgroundColor, 1),
+            backgroundColor: widget.theme.btnBackgroundColor,
             padding: EdgeInsets.zero,
             minimumSize: Size.zero,
           ),
-          child: _buildKeyContent(theme),
+          child: _buildKeyContent(widget.theme),
         ),
       ),
     );
@@ -220,17 +227,18 @@ class _LongPressKeyState extends State<TextKey> {
       fit: StackFit.expand,
       children: [
         primaryText,
-        Align(
-          alignment: Alignment.topRight,
-          child: FractionallySizedBox(
-            widthFactor: 0.45,
-            heightFactor: 0.5,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                _applyCase(widget.alternatives.first),
-                style: theme.btnSecondaryTextStyle,
-                textAlign: TextAlign.center,
+        ExcludeSemantics(
+          child: Align(
+            alignment: Alignment.topRight,
+            child: FractionallySizedBox(
+              widthFactor: _secondaryWidthFactor,
+              heightFactor: _secondaryHeightFactor,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  _applyCase(widget.alternatives.first),
+                  style: theme.btnSecondaryTextStyle,
+                ),
               ),
             ),
           ),
