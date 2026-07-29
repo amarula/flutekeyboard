@@ -9,6 +9,7 @@ class TextKey extends StatefulWidget {
   final String text;
   final List<String> alternatives;
   final bool isShifted;
+  final bool showSecondaryValues;
   final TextEditingController textController;
   late final FluteKeyboardTheme theme;
 
@@ -17,6 +18,7 @@ class TextKey extends StatefulWidget {
     required this.isShifted,
     required this.textController,
     this.alternatives = const [],
+    this.showSecondaryValues = false,
     FluteKeyboardTheme? theme,
     super.key,
   }) {
@@ -82,7 +84,7 @@ class _LongPressKeyState extends State<TextKey> {
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    widget.isShifted ? char.toUpperCase() : char.toLowerCase(),
+                    _applyCase(char),
                     style: widget.theme.btnTextStyle,
                   ),
                 );
@@ -97,7 +99,7 @@ class _LongPressKeyState extends State<TextKey> {
   }
 
   void _insertText(String char) {
-    char = widget.isShifted ? char.toUpperCase() : char.toLowerCase();
+    char = _applyCase(char);
 
     // Cursor is at the end of the text.
     if (widget.textController.selection.start ==
@@ -190,16 +192,50 @@ class _LongPressKeyState extends State<TextKey> {
             padding: EdgeInsets.zero,
             minimumSize: Size.zero,
           ),
-          child: Center(
-            child: Text(
-              widget.isShifted
-                  ? widget.text.toUpperCase()
-                  : widget.text.toLowerCase(),
-              style: theme.btnTextStyle,
+          child: _buildKeyContent(theme),
+        ),
+      ),
+    );
+  }
+
+  String _applyCase(String value) =>
+      widget.isShifted ? value.toUpperCase() : value.toLowerCase();
+
+  Widget _buildKeyContent(FluteKeyboardTheme theme) {
+    final primaryText = Center(
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          _applyCase(widget.text),
+          style: theme.btnTextStyle,
+        ),
+      ),
+    );
+
+    if (!widget.showSecondaryValues || widget.alternatives.isEmpty) {
+      return primaryText;
+    }
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        primaryText,
+        Align(
+          alignment: Alignment.topRight,
+          child: FractionallySizedBox(
+            widthFactor: 0.45,
+            heightFactor: 0.5,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                _applyCase(widget.alternatives.first),
+                style: theme.btnSecondaryTextStyle,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

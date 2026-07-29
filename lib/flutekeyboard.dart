@@ -25,6 +25,7 @@ class FluteKeyboard extends StatefulWidget {
   final String backspaceIcon;
   final String languageIcon;
   final bool hideSpaceText;
+  final bool showSecondaryValues;
   final List<FluteLayout> alphanumericLayouts;
   final FluteLayout? initialAlphanumericLayout;
   final ValueChanged<FluteLayout>? onAlphanumericLayoutChanged;
@@ -53,6 +54,7 @@ class FluteKeyboard extends StatefulWidget {
     this.returnIcon = '',
     this.languageIcon = '',
     this.hideSpaceText = false,
+    this.showSecondaryValues = false,
   })  : assert(
           alphanumericLayouts.isNotEmpty,
           'alphanumericLayouts must contain at least one layout',
@@ -106,6 +108,7 @@ class _FluteKeyboardState extends State<FluteKeyboard> {
       shiftActiveIcon: widget.shiftActiveIcon,
       backspaceIcon: widget.backspaceIcon,
       hideSpaceText: widget.hideSpaceText,
+      showSecondaryValues: widget.showSecondaryValues,
       layout: selectedLayout.layout,
       returnIcon: widget.returnIcon,
       languageIcon: widget.languageIcon,

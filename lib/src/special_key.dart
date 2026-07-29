@@ -57,9 +57,12 @@ class _SpecialKeyState extends State<SpecialKey> {
         minimumSize: Size.zero,
       ),
       child: Center(
-        child: Text(
-          widget.text,
-          style: widget.textStyle ?? theme.btnTextStyle,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            widget.text,
+            style: widget.textStyle ?? theme.btnTextStyle,
+          ),
         ),
       ),
     );
