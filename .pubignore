@@ -1,0 +1,32 @@
+# A .pubignore in a directory replaces its .gitignore for pub, so the
+# .gitignore rules are replicated here in addition to the pub-only ones.
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Flutter/Dart/Pub related
+/pubspec.lock
+**/doc/api/
+.dart_tool/
+build/
+
+# FVM Version Cache
+.fvm/
+
+# Pub-only: GitHub Pages site source, not part of the package
+docs/
