@@ -1,0 +1,61 @@
+name: Deploy GitHub Pages
+
+on:
+  push: { branches: [main] }
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/cirruslabs/flutter:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Flutter doctor
+        run: flutter doctor
+
+      - name: Install example dependencies
+        run: flutter pub get
+        working-directory: example
+
+      - name: Build web demo
+        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/demo/"
+        working-directory: example
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site/demo
+          cp -r docs/. _site/
+          cp -r example/build/web/. _site/demo/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        id: deployment
