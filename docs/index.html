@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FluteKeyboard - Virtual Keyboard for Flutter Embedded</title>
+    <meta name="description"
+        content="FluteKeyboard — a fully customizable, multi-language virtual keyboard widget for Flutter embedded and kiosk apps. Zero dependencies. Try the live demo.">
+    <meta property="og:title" content="FluteKeyboard – Virtual Keyboard for Flutter Embedded">
+    <meta property="og:description"
+        content="Customizable, multi-language on-screen keyboard for Flutter. Try the live demo.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://amarula.github.io/flutekeyboard/">
+    <meta property="og:image" content="https://amarula.github.io/flutekeyboard/assets/basic_alphanum_keyboard.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⌨️</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f9fafb;
+            color: #111827;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2563eb, #1e3a8a);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        header h1 { font-size: 2.5rem; font-weight: 800; }
+        header p { margin-top: 1rem; font-size: 1.2rem; }
+
+        .badge { margin-top: 1.5rem; }
+        .badge img { height: 1.5rem; vertical-align: middle; }
+
+        .cta { margin-top: 2rem; }
+
+        .cta a {
+            display: inline-block;
+            background: white;
+            color: #1e3a8a;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            margin: 0.25rem 0.5rem;
+            transition: background 0.3s;
+        }
+
+        .cta a:hover { background: #e0e7ff; }
+
+        section {
+            max-width: 1000px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        section h2 { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; }
+        section p { color: #4b5563; font-size: 1.1rem; margin-bottom: 2rem; }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+
+        .feature:hover { transform: translateY(-5px); }
+        .feature h3 { margin-bottom: 1rem; font-size: 1.3rem; color: #2563eb; }
+
+        .demo-frame { max-width: 880px; margin: 0 auto; }
+
+        .demo-frame iframe {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            min-height: 480px;
+            border: 0;
+            border-radius: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background: #f9fafb;
+        }
+
+        .demo-note { margin-top: 1rem; font-size: 0.95rem; }
+        .demo-note a { color: #2563eb; text-decoration: none; font-weight: 600; }
+        .demo-note a:hover { text-decoration: underline; }
+
+        .code-block {
+            background: #0f172a;
+            color: #e2e8f0;
+            text-align: left;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 0 auto 2rem;
+            max-width: 720px;
+            overflow-x: auto;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .code-block code {
+            font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+            white-space: pre;
+        }
+
+        .media-section { margin-top: 4rem; }
+
+        .media-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .media-item { max-width: 420px; text-align: center; }
+
+        .media-item img {
+            width: 100%;
+            border-radius: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 0.5rem;
+        }
+
+        .media-item h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: #2563eb;
+        }
+
+        .media-item p { font-size: 0.95rem; color: #4b5563; }
+
+        footer {
+            background: #1e293b;
+            color: #cbd5e1;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            font-size: 0.9rem;
+        }
+
+        footer a { color: #93c5fd; text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>FluteKeyboard</h1>
+        <p>A customizable, multi-language Virtual Keyboard for Flutter Embedded Projects</p>
+        <div class="badge">
+            <a href="https://pub.dev/packages/flutekeyboard" target="_blank" rel="noopener">
+                <img src="https://img.shields.io/pub/v/flutekeyboard" alt="pub.dev version">
+            </a>
+        </div>
+        <div class="cta">
+            <a href="#demo">Live Demo</a>
+            <a href="https://github.com/amarula/flutekeyboard" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://pub.dev/packages/flutekeyboard" target="_blank" rel="noopener">PubDev</a>
+        </div>
+    </header>
+
+    <section>
+        <h2>Why FluteKeyboard?</h2>
+        <p>FluteKeyboard brings a flexible, easy-to-integrate virtual keyboard for embedded Flutter projects, enabling
+            developers to create intuitive and responsive input experiences on touch-based devices.</p>
+        <div class="features">
+            <div class="feature">
+                <h3>🌍 Multi-Language</h3>
+                <p>9 built-in layouts — English, Italiano, Deutsch, Français, Español, Português, Polski, Nederlands,
+                    Čeština — switchable at runtime with the language picker key.</p>
+            </div>
+            <div class="feature">
+                <h3>👆 Long-Press Alternatives</h3>
+                <p>Accented characters and symbols in a press-and-hold popup, with optional secondary hints shown
+                    directly on the key face.</p>
+            </div>
+            <div class="feature">
+                <h3>🧩 Custom Layouts</h3>
+                <p>Define your own alphanumeric and numeric key arrangements, including blank keys for grid spacing.</p>
+            </div>
+            <div class="feature">
+                <h3>🎨 Fully Themable</h3>
+                <p>Colors, text styles and icons are all configurable through <code>FluteKeyboardTheme</code>.</p>
+            </div>
+            <div class="feature">
+                <h3>🔣 Symbol Pages</h3>
+                <p>Two symbol pages with punctuation, currency and special characters, plus a dedicated numeric
+                    keypad mode.</p>
+            </div>
+            <div class="feature">
+                <h3>⚡ Zero Dependencies</h3>
+                <p>Pure Flutter widgets with no third-party packages — lightweight and ideal for embedded and kiosk
+                    devices.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo" class="media-section">
+        <h2>Try It Live</h2>
+        <p>This is the real keyboard running as a Flutter web app — type, long-press for accents, and switch
+            languages and layouts.</p>
+        <div class="demo-frame">
+            <iframe src="demo/" title="FluteKeyboard live demo" loading="lazy"></iframe>
+        </div>
+        <p class="demo-note">Click inside the frame to interact.
+            <a href="demo/" target="_blank" rel="noopener">Open full screen ↗</a></p>
+    </section>
+
+    <section>
+        <h2>Get Started</h2>
+        <p>Add the package to your <code>pubspec.yaml</code> and drop the widget into your app.</p>
+        <pre class="code-block"><code>dependencies:
+  flutekeyboard: ^latest_version</code></pre>
+        <pre class="code-block"><code>final theme = FluteKeyboardTheme()
+  ..backgroundColor = const Color(0xFFD1D3D7)
+  ..btnBackgroundColor = Colors.white
+  ..btnTextStyle = const TextStyle(color: Colors.black, fontSize: 28);
+
+FluteKeyboard(
+  type: FluteKeyboardType.alphanumeric,
+  textController: _textController,
+  theme: theme,
+  alphanumericLayouts: const [FluteLayout.en, FluteLayout.it, FluteLayout.de],
+  showSecondaryValues: true,
+  shiftIcon: 'assets/shift.png',
+  shiftActiveIcon: 'assets/shift_active.png',
+  backspaceIcon: 'assets/backspace.png',
+  languageIcon: 'assets/language.png',
+  onReturn: () =&gt; print(_textController.text),
+)</code></pre>
+    </section>
+
+    <section class="media-section">
+        <h2>Screenshots</h2>
+        <div class="media-content">
+            <div class="media-item">
+                <img src="assets/basic_alphanum_keyboard.png" alt="Built-in alphanumeric keyboard with secondary key hints">
+                <h4>Built-in Layout</h4>
+                <p>QWERTY-style layout with secondary key hints and the language picker key.</p>
+            </div>
+
+            <div class="media-item">
+                <img src="assets/custom_alphanum_keyboard.png" alt="Custom alphanumeric keyboard layout">
+                <h4>Custom Layout</h4>
+                <p>Tailor-made key arrangement with a dedicated digit row.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Made with ❤️ for Flutter Embedded | <a href="https://github.com/amarula/flutekeyboard"
+                target="_blank" rel="noopener">GitHub</a> | <a href="https://pub.dev/packages/flutekeyboard"
+                target="_blank" rel="noopener">PubDev</a></p>
+    </footer>
+</body>
+
+</html>
