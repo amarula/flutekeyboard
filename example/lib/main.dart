@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:math' as math;
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 
@@ -60,6 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final keyboardWidth = math.min(MediaQuery.sizeOf(context).width, 800.0);
     final theme = FluteKeyboardTheme();
 
     theme.backgroundColor = const Color.fromARGB(255, 209, 211, 215);
@@ -130,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               flex: 3,
               child: FluteKeyboard(
-                width: 800,
+                width: keyboardWidth,
                 type: type,
                 alphanumericLayouts: const [
                   FluteLayout(
