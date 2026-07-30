@@ -51,6 +51,11 @@ class _IconKeyState extends State<IconKey> {
           },
         );
       },
+      onLongPressCancel: () {
+        setState(() {
+          _longPress = false;
+        });
+      },
       onLongPressUp: () {
         setState(() {
           _longPress = false;
