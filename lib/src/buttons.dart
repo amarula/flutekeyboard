@@ -16,6 +16,7 @@ class Buttons {
       child: IconKey(
         icon: icon,
         backgroundColor: theme.btnSpecialBackgroundColor,
+        repeatOnLongPress: true,
         onPressed: () {
           final text = textController.text;
           final textSelection = textController.selection;

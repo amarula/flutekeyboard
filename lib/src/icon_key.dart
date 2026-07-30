@@ -19,11 +19,17 @@ class IconKey extends StatefulWidget {
 
   final Function onPressed;
 
+  /// Whether holding the key keeps invoking [onPressed] until it is released.
+  ///
+  /// Only meaningful for keys whose action is repeatable, such as backspace.
+  final bool repeatOnLongPress;
+
   const IconKey({
     super.key,
     required this.icon,
     required this.backgroundColor,
     required this.onPressed,
+    this.repeatOnLongPress = false,
   });
 
   @override
@@ -33,29 +39,47 @@ class IconKey extends StatefulWidget {
 class _IconKeyState extends State<IconKey> {
   bool _longPress = false;
 
+  Timer? _repeatTimer;
+
+  void _startRepeat() {
+    setState(() {
+      _longPress = true;
+    });
+
+    if (!widget.repeatOnLongPress) {
+      return;
+    }
+
+    _repeatTimer?.cancel();
+    _repeatTimer = Timer.periodic(
+      const Duration(milliseconds: 200),
+      (_) => widget.onPressed(),
+    );
+  }
+
+  void _stopRepeat() {
+    _repeatTimer?.cancel();
+    _repeatTimer = null;
+
+    if (mounted) {
+      setState(() {
+        _longPress = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _repeatTimer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onLongPress: () {
-        setState(() {
-          _longPress = true;
-        });
-        Timer.periodic(
-          const Duration(milliseconds: 200),
-          (timer) {
-            if (_longPress) {
-              widget.onPressed();
-            } else {
-              timer.cancel();
-            }
-          },
-        );
-      },
-      onLongPressUp: () {
-        setState(() {
-          _longPress = false;
-        });
-      },
+      onLongPress: _startRepeat,
+      onLongPressCancel: _stopRepeat,
+      onLongPressUp: _stopRepeat,
       child: ElevatedButton(
         onPressed: () => widget.onPressed(),
         style: ElevatedButton.styleFrom(
