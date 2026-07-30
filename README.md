@@ -1,5 +1,7 @@
 # Flutekeyboard – Customizable, Multi-Language On-Screen Keyboard
 
+**[🌐 Live demo & website →](https://amarula.github.io/flutekeyboard/)**
+
 ## ✨ Features
 
 - **Alphanumeric and numeric keyboards**
@@ -56,29 +58,38 @@ To create custom layout import:
 import 'package:flutekeyboard/flutekeyboard_keys.dart';
 ```
 
+To customize colors and text styles import the theme:
+
+```dart
+import 'package:flutekeyboard/flutekeyboard_theme.dart';
+```
+
 ## 🚀 Usage
 
 ### Basic Alphanumeric Keyboard
 
 ```dart
-    Expanded(
-      child: FluteKeyboard(
-        width: 800,
-        type: FluteKeyboardType.alphanumeric,
-        textController: _textController,
-        backgroundColor: const Color.fromARGB(255, 209, 211, 215),
-        btnBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        btnSpecialBackgroundColor:
-            const Color.fromARGB(255, 171, 175, 183),
-        backspaceIcon: 'assets/backspace.png',
-        btnTextStyle: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 28,
-                ),
-        shiftIcon: 'assets/shift.png',
-        shiftActiveIcon: 'assets/shift_active.png',
-      ),
-    ),
+final theme = FluteKeyboardTheme()
+  ..backgroundColor = const Color.fromARGB(255, 209, 211, 215)
+  ..btnBackgroundColor = Colors.white
+  ..btnSpecialBackgroundColor = const Color.fromARGB(255, 171, 175, 183)
+  ..btnTextStyle = const TextStyle(
+    color: Colors.black,
+    fontSize: 28,
+  );
+
+Expanded(
+  child: FluteKeyboard(
+    width: 800,
+    type: FluteKeyboardType.alphanumeric,
+    textController: _textController,
+    theme: theme,
+    shiftIcon: 'assets/shift.png',
+    shiftActiveIcon: 'assets/shift_active.png',
+    backspaceIcon: 'assets/backspace.png',
+    onReturn: () => print(_textController.text),
+  ),
+),
 ```
 
 ![Basic Alphanumeric Keyboard](screenshots/basic_alphanum_keyboard.png)
@@ -136,7 +147,7 @@ const FluteLayout customLayout = FluteLayout(
 );
 ```
 
-Pass one or more `FluteLayout`s to `alphanumericLayout`. With two or more, a
+Pass one or more `FluteLayout`s to `alphanumericLayouts`. With two or more, a
 language picker button (icon set via `languageIcon`) is shown to switch between
 them at runtime:
 
