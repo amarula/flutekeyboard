@@ -1,5 +1,8 @@
 ## 0.4.0
 
+* Add multi-layout support and language picker to AlphanumericKeyboard
+* Add custom layout support to NumericKeyboard
+* Add BlankButton for alphanumeric and numeric layouts
 * Show secondary key values as hints on the key face (showSecondaryValues)
 * Add btnSecondaryTextStyle theme property to style the hints
 * Improve key content scaling when the keyboard is resized
