@@ -1,3 +1,8 @@
+## 0.4.1
+
+* IconKey: stop the long-press repeat timer reliably, so a cancelled pointer no longer leaves it running
+* Make key auto-repeat opt-in via repeatOnLongPress; only backspace repeats
+
 ## 0.4.0
 
 * Add multi-layout support and language picker to AlphanumericKeyboard
